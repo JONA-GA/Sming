@@ -27,7 +27,7 @@ SPI_SPEED ?= 40
 # SPI_MODE: qio, qout, dio, dout
 SPI_MODE ?= qio
 # SPI_SIZE: 512K, 256K, 1M, 2M, 4M
-SPI_SIZE ?= 512K
+SPI_SIZE ?= 2M
 
 ### Debug output parameters
 # By default `debugf` does not print file name and line number. If you want this enabled set the directive below to 1
@@ -49,25 +49,25 @@ INIT_BIN_ADDR =  0x7c000
 BLANK_BIN_ADDR =  0x4b000
 
 # esptool2 path
-ESPTOOL2 ?= esptool2
+ESPTOOL2 ?= $(ESP_HOME)/esptool2
 # esptool2 parameters for rBootLESS images
 ESPTOOL2_SECTS		?= .text .data .rodata
-ESPTOOL2_MAIN_ARGS	?= -quiet -bin -boot0
-ESPTOOL2_SDK_ARGS	?= -quiet -lib
+ESPTOOL2_MAIN_ARGS	?= -bin -boot0
+ESPTOOL2_SDK_ARGS	?= -lib
 
 ## ESP_HOME sets the path where ESP tools and SDK are located.
 ## Windows:
 # ESP_HOME = c:/Espressif
 
 ## MacOS / Linux:
-# ESP_HOME = /opt/esp-open-sdk
+ESP_HOME = /home/gilles/esp8266/esp-open-sdk
 
 ## SMING_HOME sets the path where Sming framework is located.
 ## Windows:
 # SMING_HOME = c:/tools/sming/Sming 
 
 # MacOS / Linux
-# SMING_HOME = /opt/esp-open-sdk
+SMING_HOME = /home/gilles/esp8266/Sming/Sming
 
 ## COM port parameter is reqruied to flash firmware correctly.
 ## Windows: 
@@ -197,7 +197,7 @@ endif
 
 LIBPWM = pwm
 
-ENABLE_CUSTOM_PWM ?= 1
+ENABLE_CUSTOM_PWM ?= 0
 ifeq ($(ENABLE_CUSTOM_PWM), 1)
 	LIBPWM = pwm_open
 	CUSTOM_TARGETS += $(USER_LIBDIR)/lib$(LIBPWM).a
@@ -338,7 +338,7 @@ SPIFF_BIN_OUT := $(FW_BASE)/$(SPIFF_BIN_OUT).bin
 
 INCDIR	:= $(addprefix -I,$(SRC_DIR))
 EXTRA_INCDIR	:= $(addprefix -I,$(EXTRA_INCDIR))
-MODULE_INCDIR	:= $(addsuffix /include,$(INCDIR))
+MODULE_INCDIR	:= $(addsuffix include,$(INCDIR))
 
 V ?= $(VERBOSE)
 ifeq ("$(V)","1")
@@ -392,8 +392,8 @@ $(TARGET_OUT): $(APP_AR)
 	$(vecho) "------------------------------------------------------------------------------"
 	$(vecho) "# Generating image..."
 #	$(Q) $(ESPTOOL2) elf2image $@ $(flashimageoptions) -o $(FW_BASE)/
-	$(Q) $(ESPTOOL2) $(ESPTOOL2_MAIN_ARGS) $@ $(FW_BASE)/$(IMAGE_MAIN) $(ESPTOOL2_SECTS)
-	$(Q) $(ESPTOOL2) $(ESPTOOL2_SDK_ARGS) $@ $(FW_BASE)/$(IMAGE_SDK)
+	$(Q) $(ESPTOOL2)/esptool2 $(ESPTOOL2_MAIN_ARGS) $@ $(FW_BASE)/$(IMAGE_MAIN) $(ESPTOOL2_SECTS)
+	$(Q) $(ESPTOOL2)/esptool2 $(ESPTOOL2_SDK_ARGS) $@ $(FW_BASE)/$(IMAGE_SDK)
 	$(vecho) "Generate firmware images successully in folder $(FW_BASE)."
 	$(vecho) "Done"
 
@@ -417,7 +417,7 @@ $(USER_LIBDIR)/libpwm_open.a:
 endif
 
 ifeq ($(ENABLE_CUSTOM_LWIP), 1)
-$(USER_LIBDIR)/liblwip_%.a:
+$(USER_LIBDIR)/liblwip_open.a:
 	$(Q) $(MAKE) -C $(SMING_HOME) compiler/lib/$(notdir $@) ENABLE_CUSTOM_LWIP=1 ENABLE_ESPCONN=$(ENABLE_ESPCONN)
 endif
 

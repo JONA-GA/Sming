@@ -13,11 +13,11 @@
 # ESP_HOME = c:/Espressif
 
 ## MacOS / Linux:
-# ESP_HOME = /opt/esp-open-sdk
+ESP_HOME = /home/gilles/esp8266/esp-open-sdk
 
 ## SMING_HOME sets the path where Sming framework is located.
 ## Windows:
-# SMING_HOME = c:/tools/sming/Sming 
+SMING_HOME = /home/gilles/esp8266/Sming/Sming 
 
 # MacOS / Linux
 # SMING_HOME = /opt/esp-open-sdk
@@ -216,7 +216,7 @@ endif
 # libraries used in this project, mainly provided by the SDK
 LIBS		= microc microgcc hal phy pp net80211 $(LIBLWIP) wpa main
 
-ENABLE_CUSTOM_PWM ?= 1
+ENABLE_CUSTOM_PWM ?= 0
 ifeq ($(ENABLE_CUSTOM_PWM), 1)
 	THIRD_PARTY_DATA += third-party/pwm/pwm.c
 endif
@@ -303,7 +303,7 @@ LD_SCRIPT	:= $(addprefix -T,$(LD_SCRIPT))
 
 INCDIR	:= $(addprefix -I,$(SRC_DIR))
 EXTRA_INCDIR	:= $(addprefix -I,$(EXTRA_INCDIR))
-MODULE_INCDIR	:= $(addsuffix /include,$(INCDIR))
+MODULE_INCDIR	:= $(addsuffix include,$(INCDIR))
 
 SAMPLES_DIRS := $(shell ls -1 ../samples)
 THIRD_PARTY_DIRS := $(shell ls -1 third-party )
@@ -365,7 +365,7 @@ $(USER_LIBDIR)/libmainmm.a: $(addprefix $(SDK_LIBDIR)/,libmain.a)
 endif
 
 ifeq ($(ENABLE_CUSTOM_LWIP), 1)
-$(USER_LIBDIR)/liblwip_%.a: third-party/esp-open-lwip/Makefile.open
+$(USER_LIBDIR)/liblwip_open.a: third-party/esp-open-lwip/Makefile.open
 	$(Q) $(MAKE) -C third-party/esp-open-lwip/ -f Makefile.open ENABLE_ESPCONN=$(ENABLE_ESPCONN) SDK_BASE="$(SDK_BASE)" USER_LIBDIR="$(SMING_HOME)/$(USER_LIBDIR)/" CFLAGS_EXTRA="$(EXTRA_CFLAGS_LWIP)" all
 endif
 

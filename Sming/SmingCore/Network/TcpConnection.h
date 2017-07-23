@@ -5,6 +5,11 @@
  * All files of the Sming Core are provided under the LGPL v3 license.
  ****/
 
+/** @defgroup tcp TCP
+ *  @ingroup networking
+ *  @{
+ */
+
 #ifndef _SMING_CORE_TCPCONNECTION_H_
 #define _SMING_CORE_TCPCONNECTION_H_
 
@@ -83,7 +88,7 @@ public:
 
 	// return -1 on error
 	int writeString(const char* data, uint8_t apiflags = TCP_WRITE_FLAG_COPY);
-	int writeString(const String data, uint8_t apiflags = TCP_WRITE_FLAG_COPY);
+	int writeString(const String& data, uint8_t apiflags = TCP_WRITE_FLAG_COPY);
 	// return -1 on error
 	virtual int write(const char* data, int len, uint8_t apiflags = TCP_WRITE_FLAG_COPY); // flags: TCP_WRITE_FLAG_COPY, TCP_WRITE_FLAG_MORE
 	int write(IDataSourceStream* stream);
@@ -231,4 +236,5 @@ protected:
 	bool useSsl = false;
 };
 
+/** @} */
 #endif /* _SMING_CORE_TCPCONNECTION_H_ */

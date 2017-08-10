@@ -382,7 +382,7 @@ $(FW_BASE)/$(IMAGE_MAIN): $(APP_AR)
 	
 	$(Q) $(STRIP) $(TARGET_OUT).tmp
 
-	$(Q) $(ESPTOOL2) $(ESPTOOL2_MAIN_ARGS) $(TARGET_OUT).tmp $@ $(ESPTOOL2_SECTS)
+	$(Q) $(ESPTOOL2)/esptool2 $(ESPTOOL2_MAIN_ARGS) $(TARGET_OUT).tmp $@ $(ESPTOOL2_SECTS)
 	
 	$(Q) rm $(TARGET_OUT).tmp
 
